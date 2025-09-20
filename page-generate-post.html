@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>一键生成帖子 - 即刻出行</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义样式 - 参考Mount Bromo设计 */
+        .gradient-bg {
+            background: linear-gradient(135deg, #ff8a65 0%, #ffab40 50%, #ff7043 100%);
+        }
+        
+        .warm-gradient {
+            background: linear-gradient(135deg, #ff8a80 0%, #ffab40 50%, #ff7043 100%);
+        }
+        
+        .sunset-gradient {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #ff7043 0%, #ff8a65 25%, #ffab40 50%, #ffcc02 75%, #ff6b6b 100%);
+        }
+        
+        /* 页面背景 */
+        body {
+            background: linear-gradient(135deg, #fef7f0 0%, #fff3e0 100%);
+        }
+        
+        /* 圆角按钮 */
+        .rounded-btn {
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .rounded-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+        
+        .post-preview {
+            transition: all 0.3s ease;
+        }
+        
+        .post-preview:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .ai-generating {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .trip-card {
+            transition: all 0.3s ease;
+        }
+        
+        .trip-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .trip-card.selected {
+            border: 2px solid #3B82F6;
+            background: linear-gradient(135deg, #EBF8FF, #F0F9FF);
+        }
+        
+        .rating-star {
+            transition: all 0.2s ease;
+        }
+        
+        .rating-star:hover {
+            transform: scale(1.2);
+        }
+        
+        .rating-star.active {
+            color: #F59E0B;
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen p-6">
+        <!-- 页面头部 -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">一键生成帖子</h1>
+                    <p class="text-gray-600">选择您的行程，AI将为您生成精彩的分享帖子</p>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                        <i class="fas fa-save mr-2"></i>保存草稿
+                    </button>
+                    <button class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                        <i class="fas fa-eye mr-2"></i>预览效果
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <!-- 左侧：选择行程和输入反馈 -->
+            <div class="space-y-6">
+                <!-- 选择行程 -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-map-marked-alt text-white"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-800">选择要分享的行程</h2>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <!-- 行程1 -->
+                        <div class="trip-card border border-gray-200 rounded-xl p-4 cursor-pointer" data-trip="beijing">
+                            <div class="flex items-start space-x-4">
+                                <img src="https://picsum.photos/seed/beijing-trip/100/80" alt="北京行程" class="w-24 h-20 object-cover rounded-lg">
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-gray-800 mb-1">北京2日游经典路线</h3>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                                        <span><i class="fas fa-calendar text-blue-500 mr-1"></i>2024-01-15</span>
+                                        <span><i class="fas fa-clock text-emerald-500 mr-1"></i>2天1夜</span>
+                                        <span><i class="fas fa-wallet text-orange-500 mr-1"></i>¥800</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1 mb-2">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <span class="text-sm text-gray-600 ml-2">5.0分</span>
+                                    </div>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-2 py-1 bg-emerald-100 text-emerald-600 text-xs rounded-full">历史文化</span>
+                                        <span class="px-2 py-1 bg-blue-100 text-blue-600 text-xs rounded-full">摄影打卡</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- 行程2 -->
+                        <div class="trip-card border border-gray-200 rounded-xl p-4 cursor-pointer" data-trip="guangzhou">
+                            <div class="flex items-start space-x-4">
+                                <img src="https://picsum.photos/seed/guangzhou-trip/100/80" alt="广州行程" class="w-24 h-20 object-cover rounded-lg">
+                                <div class="flex-1">
+                                    <h3 class="font-semibold text-gray-800 mb-1">广州美食探索之旅</h3>
+                                    <div class="flex items-center space-x-4 text-sm text-gray-600 mb-2">
+                                        <span><i class="fas fa-calendar text-blue-500 mr-1"></i>2024-01-10</span>
+                                        <span><i class="fas fa-clock text-emerald-500 mr-1"></i>3天2夜</span>
+                                        <span><i class="fas fa-wallet text-orange-500 mr-1"></i>¥900</span>
+                                    </div>
+                                    <div class="flex items-center space-x-1 mb-2">
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                        <i class="fas fa-star text-gray-300"></i>
+                                        <span class="text-sm text-gray-600 ml-2">4.2分</span>
+                                    </div>
+                                    <div class="flex flex-wrap gap-1">
+                                        <span class="px-2 py-1 bg-red-100 text-red-600 text-xs rounded-full">美食之旅</span>
+                                        <span class="px-2 py-1 bg-emerald-100 text-emerald-600 text-xs rounded-full">文化体验</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 行程评价和反馈 -->
+                <div class="bg-white rounded-2xl shadow-lg p-6">
+                    <div class="flex items-center space-x-3 mb-6">
+                        <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-star text-white"></i>
+                        </div>
+                        <h2 class="text-xl font-semibold text-gray-800">行程评价</h2>
+                    </div>
+                    
+                    <div class="space-y-6">
+                        <!-- 整体评分 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-3">整体满意度</label>
+                            <div class="flex items-center space-x-2">
+                                <i class="fas fa-star rating-star text-2xl text-gray-300 cursor-pointer" data-rating="1"></i>
+                                <i class="fas fa-star rating-star text-2xl text-gray-300 cursor-pointer" data-rating="2"></i>
+                                <i class="fas fa-star rating-star text-2xl text-gray-300 cursor-pointer" data-rating="3"></i>
+                                <i class="fas fa-star rating-star text-2xl text-gray-300 cursor-pointer" data-rating="4"></i>
+                                <i class="fas fa-star rating-star text-2xl text-gray-300 cursor-pointer" data-rating="5"></i>
+                                <span class="ml-3 text-sm text-gray-600">点击评分</span>
+                            </div>
+                        </div>
+                        
+                        <!-- 详细评价 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">分享您的感受</label>
+                            <textarea 
+                                id="feedback-text"
+                                placeholder="分享一下这次旅行的感受，哪些地方最让您印象深刻？有什么建议给其他旅行者吗？"
+                                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 resize-none"
+                            ></textarea>
+                        </div>
+                        
+                        <!-- 推荐理由 -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">推荐理由</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-500 focus:ring-blue-500" value="scenic">
+                                    <span class="ml-2 text-sm text-gray-700">风景优美</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-500 focus:ring-blue-500" value="food">
+                                    <span class="ml-2 text-sm text-gray-700">美食丰富</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-500 focus:ring-blue-500" value="culture">
+                                    <span class="ml-2 text-sm text-gray-700">文化深厚</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-500 focus:ring-blue-500" value="budget">
+                                    <span class="ml-2 text-sm text-gray-700">性价比高</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-500 focus:ring-blue-500" value="convenient">
+                                    <span class="ml-2 text-sm text-gray-700">交通便利</span>
+                                </label>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="rounded border-gray-300 text-blue-500 focus:ring-blue-500" value="photo">
+                                    <span class="ml-2 text-sm text-gray-700">拍照好看</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <!-- 生成按钮 -->
+                        <button 
+                            id="generate-post-btn"
+                            class="w-full rounded-btn gradient-bg text-white py-4 font-semibold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300"
+                        >
+                            <i class="fas fa-magic mr-2"></i>AI生成帖子
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 右侧：AI生成结果 -->
+            <div class="space-y-6">
+                <!-- 生成状态 -->
+                <div id="generating-state" class="bg-white rounded-2xl shadow-lg p-8 text-center">
+                    <div class="w-20 h-20 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-magic text-white text-3xl ai-generating"></i>
+                    </div>
+                    <h3 class="text-xl font-semibold text-gray-800 mb-2">AI正在为您生成帖子...</h3>
+                    <p class="text-gray-600 mb-4">请稍候，我们正在分析您的行程和评价，生成精彩的分享内容</p>
+                    <div class="w-full bg-gray-200 rounded-full h-2">
+                        <div class="bg-gradient-to-r from-blue-500 to-emerald-500 h-2 rounded-full animate-pulse" style="width: 0%" id="progress-bar"></div>
+                    </div>
+                </div>
+                
+                <!-- 生成结果 -->
+                <div id="generated-content" class="hidden space-y-6">
+                    <!-- 帖子预览 -->
+                    <div class="bg-white rounded-2xl shadow-lg p-6 post-preview fade-in">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 bg-emerald-500 rounded-lg flex items-center justify-center">
+                                <i class="fas fa-check text-white"></i>
+                            </div>
+                            <h2 class="text-xl font-semibold text-gray-800">AI生成的帖子</h2>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <!-- 帖子标题 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">帖子标题</label>
+                                <input 
+                                    type="text" 
+                                    id="post-title"
+                                    value="北京2日游完美攻略 | 故宫+长城经典路线，避开人流高峰的绝佳体验！"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent font-semibold text-lg"
+                                >
+                            </div>
+                            
+                            <!-- 帖子内容 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">帖子内容</label>
+                                <textarea 
+                                    id="post-content"
+                                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent h-64 resize-none"
+                                >这次北京之行真的太棒了！AI帮我规划的路线完美避开了人流高峰，让我能够深度体验每个景点的魅力。
+
+🏛️ **故宫博物院** - 早上的故宫人少景美，红墙黄瓦在晨光中格外壮观。建议8点前到达，可以拍到无人的太和殿广场。
+
+🏰 **八达岭长城** - 下午的长城日落是这次旅行的高光时刻！夕阳西下，长城蜿蜒在群山之间，美得让人窒息。
+
+🍜 **美食推荐**：
+- 全聚德烤鸭：正宗北京味道，皮脆肉嫩
+- 老北京炸酱面：胡同里的老字号，味道地道
+- 糖葫芦：王府井大街的糖葫芦，童年的味道
+
+📸 **拍照攻略**：
+- 故宫：太和殿广场、角楼、红墙
+- 长城：烽火台、城墙拐角、日落时分
+- 天安门：夜景灯光秀，最佳拍摄时间19:30
+
+💰 **费用明细**：
+- 交通：¥200（地铁+公交）
+- 住宿：¥300（王府井附近酒店）
+- 餐饮：¥200（正餐+小吃）
+- 门票：¥100（故宫+长城）
+
+这次旅行让我深深爱上了北京这座城市，每个角落都充满了历史的故事。强烈推荐大家按照这个路线走，绝对不虚此行！
+
+#北京旅游 #故宫 #长城 #旅行攻略 #AI规划</textarea>
+                            </div>
+                            
+                            <!-- 标签选择 -->
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">标签</label>
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="px-3 py-1 bg-emerald-100 text-emerald-600 text-sm rounded-full cursor-pointer hover:bg-emerald-200">历史文化</span>
+                                    <span class="px-3 py-1 bg-blue-100 text-blue-600 text-sm rounded-full cursor-pointer hover:bg-blue-200">摄影打卡</span>
+                                    <span class="px-3 py-1 bg-orange-100 text-orange-600 text-sm rounded-full cursor-pointer hover:bg-orange-200">美食之旅</span>
+                                    <span class="px-3 py-1 bg-purple-100 text-purple-600 text-sm rounded-full cursor-pointer hover:bg-purple-200">旅行攻略</span>
+                                    <span class="px-3 py-1 bg-pink-100 text-pink-600 text-sm rounded-full cursor-pointer hover:bg-pink-200">AI规划</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作按钮 -->
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center space-x-4">
+                            <button class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
+                                <i class="fas fa-redo mr-2"></i>重新生成
+                            </button>
+                            <button class="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+                                <i class="fas fa-edit mr-2"></i>编辑内容
+                            </button>
+                        </div>
+                        <button class="px-8 py-3 gradient-bg text-white rounded-lg font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+                            <i class="fas fa-share mr-2"></i>发布到社区
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 行程选择
+        document.querySelectorAll('.trip-card').forEach(card => {
+            card.addEventListener('click', function() {
+                document.querySelectorAll('.trip-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+        
+        // 评分功能
+        document.querySelectorAll('.rating-star').forEach(star => {
+            star.addEventListener('click', function() {
+                const rating = parseInt(this.dataset.rating);
+                const stars = document.querySelectorAll('.rating-star');
+                
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseenter', function() {
+                const rating = parseInt(this.dataset.rating);
+                const stars = document.querySelectorAll('.rating-star');
+                
+                stars.forEach((s, index) => {
+                    if (index < rating) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+            });
+        });
+        
+        // 鼠标离开评分区域时恢复当前评分
+        document.querySelector('.rating-star').parentElement.addEventListener('mouseleave', function() {
+            const activeStars = document.querySelectorAll('.rating-star.active');
+            if (activeStars.length === 0) {
+                // 如果没有评分，恢复默认状态
+                document.querySelectorAll('.rating-star').forEach(s => s.classList.remove('active'));
+            }
+        });
+        
+        // AI生成帖子
+        document.getElementById('generate-post-btn').addEventListener('click', function() {
+            const selectedTrip = document.querySelector('.trip-card.selected');
+            if (!selectedTrip) {
+                alert('请先选择一个行程');
+                return;
+            }
+            
+            const rating = document.querySelectorAll('.rating-star.active').length;
+            if (rating === 0) {
+                alert('请先为行程评分');
+                return;
+            }
+            
+            // 显示生成状态
+            document.getElementById('generating-state').classList.remove('hidden');
+            document.getElementById('generated-content').classList.add('hidden');
+            
+            // 模拟进度条
+            let progress = 0;
+            const progressBar = document.getElementById('progress-bar');
+            const interval = setInterval(() => {
+                progress += Math.random() * 15;
+                if (progress >= 100) {
+                    progress = 100;
+                    clearInterval(interval);
+                    
+                    // 显示生成结果
+                    setTimeout(() => {
+                        document.getElementById('generating-state').classList.add('hidden');
+                        document.getElementById('generated-content').classList.remove('hidden');
+                    }, 500);
+                }
+                progressBar.style.width = progress + '%';
+            }, 200);
+        });
+        
+        // 重新生成功能
+        document.querySelector('button').addEventListener('click', function() {
+            if (this.textContent.includes('重新生成')) {
+                document.getElementById('generate-post-btn').click();
+            }
+        });
+        
+        // 发布功能
+        document.querySelectorAll('button').forEach(btn => {
+            if (btn.textContent.includes('发布到社区')) {
+                btn.addEventListener('click', function() {
+                    const title = document.getElementById('post-title').value;
+                    const content = document.getElementById('post-content').value;
+                    
+                    if (!title.trim() || !content.trim()) {
+                        alert('请完善帖子内容');
+                        return;
+                    }
+                    
+                    if (confirm('确定要发布这个帖子到社区吗？')) {
+                        alert('帖子发布成功！');
+                        // 这里可以添加实际的发布逻辑
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+</html>

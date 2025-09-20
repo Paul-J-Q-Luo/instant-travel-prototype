@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>即刻出行 - 智能出行规划</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义滚动条样式 - 参考Mount Bromo设计 */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fef7f0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ff8a65, #ffab40);
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff7043, #ff9800);
+        }
+        
+        /* iframe样式 */
+        iframe {
+            border: none;
+            background: white;
+            border-radius: 0 0 20px 20px;
+        }
+        
+        /* 温暖渐变背景 - 参考Mount Bromo色彩 */
+        .warm-gradient {
+            background: linear-gradient(135deg, #ff8a80 0%, #ffab40 50%, #ff7043 100%);
+        }
+        
+        .sunset-gradient {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #ff7043 0%, #ff8a65 25%, #ffab40 50%, #ffcc02 75%, #ff6b6b 100%);
+        }
+        
+        /* 导航链接悬停效果 - 温暖色调 */
+        .nav-link:hover {
+            background: linear-gradient(135deg, #ff8a65, #ffab40);
+            color: white;
+            transform: translateX(4px);
+            border-radius: 15px;
+        }
+        
+        .nav-link.active {
+            background: linear-gradient(135deg, #ff7043, #ff9800);
+            color: white;
+            border-radius: 15px;
+        }
+        
+        /* 圆角按钮样式 */
+        .rounded-btn {
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .rounded-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+        
+        /* 卡片样式 */
+        .warm-card {
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .warm-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 35px rgba(255, 107, 107, 0.2);
+        }
+        
+        /* 图标容器样式 */
+        .icon-container {
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .icon-container:hover {
+            transform: scale(1.1);
+        }
+        
+        /* 页面背景 */
+        body {
+            background: linear-gradient(135deg, #fef7f0 0%, #fff3e0 100%);
+        }
+        
+        /* 导航栏样式 */
+        .nav-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid rgba(255, 107, 107, 0.1);
+        }
+        
+        /* 顶部状态栏 */
+        .status-bar {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 107, 107, 0.1);
+        }
+    </style>
+</head>
+<body class="font-sans">
+    <div class="flex h-screen">
+        <!-- 左侧导航栏 -->
+        <div class="w-64 nav-sidebar shadow-lg flex flex-col">
+            <!-- Logo区域 -->
+            <div class="p-6 border-b border-orange-200">
+                <div class="flex items-center space-x-3">
+                    <div class="w-12 h-12 hero-gradient icon-container flex items-center justify-center">
+                        <i class="fas fa-plane text-white text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-gray-800">即刻出行</h1>
+                        <p class="text-sm text-orange-600">智能出行规划</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 导航菜单 -->
+            <nav class="flex-1 p-4 space-y-3">
+                <a href="page-home.html" target="content-frame" class="nav-link active flex items-center space-x-3 px-4 py-3 text-gray-700 transition-all duration-300">
+                    <div class="w-8 h-8 warm-gradient icon-container flex items-center justify-center">
+                        <i class="fas fa-magic text-white text-sm"></i>
+                    </div>
+                    <span class="font-medium">AI方案生成</span>
+                </a>
+                
+                <a href="page-community.html" target="content-frame" class="nav-link flex items-center space-x-3 px-4 py-3 text-gray-700 transition-all duration-300">
+                    <div class="w-8 h-8 sunset-gradient icon-container flex items-center justify-center">
+                        <i class="fas fa-users text-white text-sm"></i>
+                    </div>
+                    <span class="font-medium">社区动态</span>
+                </a>
+                
+                <a href="page-my-trips.html" target="content-frame" class="nav-link flex items-center space-x-3 px-4 py-3 text-gray-700 transition-all duration-300">
+                    <div class="w-8 h-8 hero-gradient icon-container flex items-center justify-center">
+                        <i class="fas fa-map-marked-alt text-white text-sm"></i>
+                    </div>
+                    <span class="font-medium">我的行程</span>
+                </a>
+                
+                <a href="page-profile.html" target="content-frame" class="nav-link flex items-center space-x-3 px-4 py-3 text-gray-700 transition-all duration-300">
+                    <div class="w-8 h-8 warm-gradient icon-container flex items-center justify-center">
+                        <i class="fas fa-user text-white text-sm"></i>
+                    </div>
+                    <span class="font-medium">个人中心</span>
+                </a>
+            </nav>
+            
+            <!-- 底部用户信息 -->
+            <div class="p-4 border-t border-orange-200">
+                <div class="flex items-center space-x-3">
+                    <img src="https://picsum.photos/seed/user/40/40" alt="用户头像" class="w-12 h-12 rounded-full border-2 border-orange-200">
+                    <div class="flex-1">
+                        <p class="text-sm font-medium text-gray-800">旅行达人</p>
+                        <p class="text-xs text-orange-600">已规划 12 次行程</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 右侧主内容区 -->
+        <div class="flex-1 flex flex-col">
+            <!-- 顶部状态栏 -->
+            <div class="status-bar px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <h2 class="text-lg font-semibold text-gray-800" id="page-title">AI方案生成</h2>
+                        <div class="flex items-center space-x-2 text-sm text-orange-600">
+                            <i class="fas fa-clock"></i>
+                            <span id="current-time"></span>
+                        </div>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <button class="rounded-btn flex items-center space-x-2 px-6 py-3 warm-gradient text-white hover:shadow-lg transition-all duration-300">
+                            <i class="fas fa-plus"></i>
+                            <span class="font-medium">快速规划</span>
+                        </button>
+                        <div class="relative">
+                            <button class="p-3 text-orange-500 hover:text-orange-600 transition-colors">
+                                <i class="fas fa-bell text-lg"></i>
+                            </button>
+                            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 主内容iframe -->
+            <iframe 
+                name="content-frame" 
+                src="page-home.html" 
+                class="flex-1 w-full"
+                id="main-content">
+            </iframe>
+        </div>
+    </div>
+    
+    <script>
+        // 更新时间
+        function updateTime() {
+            const now = new Date();
+            const timeString = now.toLocaleString('zh-CN', {
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('current-time').textContent = timeString;
+        }
+        
+        // 初始化时间并每秒更新
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // 导航链接点击处理
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                // 移除所有active类
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                // 添加active类到当前链接
+                this.classList.add('active');
+                
+                // 更新页面标题
+                const title = this.querySelector('span').textContent;
+                document.getElementById('page-title').textContent = title;
+            });
+        });
+        
+        // iframe加载完成后的处理
+        document.getElementById('main-content').addEventListener('load', function() {
+            // 可以在这里添加页面加载完成后的处理逻辑
+        });
+    </script>
+</body>
+</html>
