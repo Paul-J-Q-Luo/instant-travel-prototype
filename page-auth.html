@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录/注册 - 即刻出行</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 自定义样式 - 参考Mount Bromo设计 */
+        .gradient-bg {
+            background: linear-gradient(135deg, #ff8a65 0%, #ffab40 50%, #ff7043 100%);
+        }
+        
+        .warm-gradient {
+            background: linear-gradient(135deg, #ff8a80 0%, #ffab40 50%, #ff7043 100%);
+        }
+        
+        .sunset-gradient {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #ff7043 0%, #ff8a65 25%, #ffab40 50%, #ffcc02 75%, #ff6b6b 100%);
+        }
+        
+        /* 页面背景 */
+        body {
+            background: linear-gradient(135deg, #fef7f0 0%, #fff3e0 100%);
+        }
+        
+        /* 圆角按钮 */
+        .rounded-btn {
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        
+        .rounded-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+        
+        /* 卡片样式 */
+        .auth-card {
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(255, 107, 107, 0.1);
+            transition: all 0.4s ease;
+        }
+        
+        .auth-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(255, 107, 107, 0.2);
+        }
+        
+        /* 选项卡样式 */
+        .tab-btn {
+            transition: all 0.3s ease;
+            border-radius: 15px;
+        }
+        
+        .tab-btn.active {
+            background: linear-gradient(135deg, #ff8a65, #ffab40);
+            color: white;
+        }
+        
+        .tab-btn:not(.active) {
+            background: rgba(255, 255, 255, 0.8);
+            color: #666;
+        }
+        
+        .tab-btn:not(.active):hover {
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+        }
+        
+        /* 表单输入框样式 */
+        .form-input {
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            border-color: #ff8a65;
+            box-shadow: 0 0 0 3px rgba(255, 138, 101, 0.1);
+        }
+        
+        /* 社交登录按钮 */
+        .social-btn {
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen flex items-center justify-center p-6">
+        <div class="w-full max-w-md">
+            <!-- Logo区域 -->
+            <div class="text-center mb-8 fade-in">
+                <div class="w-20 h-20 hero-gradient rounded-full flex items-center justify-center mx-auto mb-4">
+                    <i class="fas fa-plane text-white text-3xl"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-gray-800 mb-2">即刻出行</h1>
+                <p class="text-orange-600">智能出行规划，开启您的精彩旅程</p>
+            </div>
+            
+            <!-- 登录/注册卡片 -->
+            <div class="bg-white auth-card p-8 fade-in">
+                <!-- 选项卡 -->
+                <div class="flex mb-8">
+                    <button id="login-tab" class="tab-btn active flex-1 py-3 px-4 text-center font-medium">
+                        <i class="fas fa-sign-in-alt mr-2"></i>登录
+                    </button>
+                    <button id="register-tab" class="tab-btn flex-1 py-3 px-4 text-center font-medium">
+                        <i class="fas fa-user-plus mr-2"></i>注册
+                    </button>
+                </div>
+                
+                <!-- 登录表单 -->
+                <form id="login-form" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope text-orange-500 mr-2"></i>邮箱地址
+                        </label>
+                        <input type="email" 
+                               id="login-email" 
+                               required
+                               placeholder="请输入您的邮箱地址"
+                               value="test@example.com"
+                               class="form-input w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock text-orange-500 mr-2"></i>密码
+                        </label>
+                        <input type="password" 
+                               id="login-password" 
+                               required
+                               placeholder="请输入您的密码"
+                               value="123456"
+                               class="form-input w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <label class="flex items-center">
+                            <input type="checkbox" class="rounded border-gray-300 text-orange-500 focus:ring-orange-500">
+                            <span class="ml-2 text-sm text-gray-600">记住我</span>
+                        </label>
+                        <a href="#" class="text-sm text-orange-600 hover:text-orange-500">忘记密码？</a>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full rounded-btn gradient-bg text-white py-4 font-semibold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-sign-in-alt mr-2"></i>立即登录
+                    </button>
+                </form>
+                
+                <!-- 注册表单 -->
+                <form id="register-form" class="space-y-6 hidden">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-envelope text-orange-500 mr-2"></i>邮箱地址
+                        </label>
+                        <input type="email" 
+                               id="register-email" 
+                               required
+                               placeholder="请输入您的邮箱地址"
+                               value="newuser@example.com"
+                               class="form-input w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock text-orange-500 mr-2"></i>密码
+                        </label>
+                        <input type="password" 
+                               id="register-password" 
+                               required
+                               placeholder="请输入密码（至少6位）"
+                               value="abcdef"
+                               class="form-input w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            <i class="fas fa-lock text-orange-500 mr-2"></i>确认密码
+                        </label>
+                        <input type="password" 
+                               id="register-confirm-password" 
+                               required
+                               placeholder="请再次输入密码"
+                               value="abcdef"
+                               class="form-input w-full px-4 py-3 border border-gray-300 focus:ring-2 focus:ring-orange-500 focus:border-transparent">
+                    </div>
+                    
+                    <div class="flex items-center">
+                        <input type="checkbox" id="agree-terms" required class="rounded border-gray-300 text-orange-500 focus:ring-orange-500">
+                        <label for="agree-terms" class="ml-2 text-sm text-gray-600">
+                            我已阅读并同意 <a href="#" class="text-orange-600 hover:text-orange-500">用户协议</a> 和 <a href="#" class="text-orange-600 hover:text-orange-500">隐私政策</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" 
+                            class="w-full rounded-btn gradient-bg text-white py-4 font-semibold text-lg hover:shadow-lg transform hover:scale-105 transition-all duration-300">
+                        <i class="fas fa-user-plus mr-2"></i>立即注册
+                    </button>
+                </form>
+                
+                <!-- 分割线 -->
+                <div class="my-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-gray-300"></div>
+                        </div>
+                        <div class="relative flex justify-center text-sm">
+                            <span class="px-2 bg-white text-gray-500">或使用社交账号登录</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 社交登录按钮 -->
+                <div class="grid grid-cols-3 gap-4">
+                    <button class="social-btn flex items-center justify-center py-3 px-4 bg-red-500 text-white hover:bg-red-600">
+                        <i class="fab fa-google text-lg"></i>
+                    </button>
+                    <button class="social-btn flex items-center justify-center py-3 px-4 bg-blue-600 text-white hover:bg-blue-700">
+                        <i class="fab fa-facebook-f text-lg"></i>
+                    </button>
+                    <button class="social-btn flex items-center justify-center py-3 px-4 bg-black text-white hover:bg-gray-800">
+                        <i class="fab fa-apple text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 底部说明 -->
+            <div class="text-center mt-8 fade-in">
+                <p class="text-sm text-gray-600">
+                    注册即表示您同意我们的服务条款和隐私政策
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // 选项卡切换
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        
+        loginTab.addEventListener('click', function() {
+            // 切换选项卡状态
+            loginTab.classList.add('active');
+            registerTab.classList.remove('active');
+            
+            // 切换表单显示
+            loginForm.classList.remove('hidden');
+            registerForm.classList.add('hidden');
+        });
+        
+        registerTab.addEventListener('click', function() {
+            // 切换选项卡状态
+            registerTab.classList.add('active');
+            loginTab.classList.remove('active');
+            
+            // 切换表单显示
+            registerForm.classList.remove('hidden');
+            loginForm.classList.add('hidden');
+        });
+        
+        // 登录表单提交
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            if (!email || !password) {
+                alert('请填写完整的登录信息');
+                return;
+            }
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('userEmail', email);
+            showSuccessMessage('登录成功！');
+            setTimeout(function() {
+                window.location.href = 'page-onboarding.html';
+            }, 1000);
+        });
+        
+        // 注册表单提交
+        document.getElementById('register-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('register-email').value;
+            const password = document.getElementById('register-password').value;
+            const confirmPassword = document.getElementById('register-confirm-password').value;
+            const agreeTerms = document.getElementById('agree-terms').checked;
+            if (!email || !password || !confirmPassword) {
+                alert('请填写完整的注册信息');
+                return;
+            }
+            if (password !== confirmPassword) {
+                alert('两次输入的密码不一致');
+                return;
+            }
+            if (password.length < 6) {
+                alert('密码长度至少为6位');
+                return;
+            }
+            if (!agreeTerms) {
+                alert('请同意用户协议和隐私政策');
+                return;
+            }
+            localStorage.setItem('isLoggedIn', 'true');
+            localStorage.setItem('isOnboarded', 'false');
+            localStorage.setItem('userEmail', email);
+            showSuccessMessage('注册成功！正在为您准备个性化体验...');
+            setTimeout(function() {
+                window.location.href = 'page-onboarding.html';
+            }, 1000);
+        });
+        
+        // 社交登录按钮点击事件
+        document.querySelectorAll('.social-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const platform = this.querySelector('i').className.includes('google') ? 'Google' :
+                               this.querySelector('i').className.includes('facebook') ? 'Facebook' : 'Apple';
+                localStorage.setItem('isLoggedIn', 'true');
+                localStorage.setItem('isOnboarded', 'false');
+                localStorage.setItem('userEmail', `user@${platform.toLowerCase()}.com`);
+                showSuccessMessage(`${platform} 登录成功！`);
+                setTimeout(function() {
+                    window.location.href = 'page-onboarding.html';
+                }, 1000);
+            });
+        });
+        
+        // 显示成功消息
+        function showSuccessMessage(message) {
+            // 创建成功提示
+            const successDiv = document.createElement('div');
+            successDiv.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50';
+            successDiv.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <i class="fas fa-check-circle"></i>
+                    <span>${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(successDiv);
+            
+            // 3秒后移除提示
+            setTimeout(() => {
+                successDiv.remove();
+            }, 3000);
+        }
+        
+        // 忘记密码功能
+        document.querySelector('a[href="#"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            if (email) {
+                alert(`密码重置链接已发送到 ${email}`);
+            } else {
+                alert('请先输入邮箱地址');
+            }
+        });
+    </script>
+</body>
+</html>
