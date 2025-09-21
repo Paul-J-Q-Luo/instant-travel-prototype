@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>动态详情 - 即刻出行</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fef7f0 0%, #fff3e0 100%);
+        }
+        .rounded-btn {
+            border-radius: 25px;
+            transition: all 0.3s ease;
+        }
+        .rounded-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+        }
+        .comment-card {
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(255, 107, 107, 0.08);
+            transition: all 0.2s ease;
+        }
+        .comment-card:hover {
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.15);
+        }
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="min-h-screen p-6 max-w-3xl mx-auto">
+        <!-- 动态详情 -->
+        <div id="post-detail" class="bg-white rounded-2xl shadow-lg p-6 mb-8 fade-in">
+            <!-- 动态内容将由JS填充 -->
+        </div>
+        <!-- 评论区 -->
+        <div class="bg-white rounded-2xl shadow-lg p-6 fade-in">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                <i class="fas fa-comments text-blue-500 mr-2"></i>评论区
+            </h3>
+            <div id="comment-list" class="space-y-4 mb-6">
+                <!-- 评论列表由JS填充 -->
+            </div>
+            <form id="comment-form" class="flex items-center space-x-3">
+                <input type="text" id="comment-input" placeholder="说点什么..." class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <button type="submit" class="rounded-btn gradient-bg text-white px-6 py-3 font-semibold hover:shadow-lg transition-all duration-300">
+                    <i class="fas fa-paper-plane mr-2"></i>发布
+                </button>
+            </form>
+        </div>
+    </div>
+    <script>
+        // 示例动态数据
+        const posts = {
+            beijing: {
+                id: 'beijing',
+                author: '旅行达人小王',
+                avatar: 'https://picsum.photos/seed/user1/50/50',
+                time: '2小时前',
+                title: '北京2日游完美攻略 | 故宫+长城经典路线',
+                tags: ['历史文化', '摄影打卡', '美食之旅'],
+                images: [
+                    'https://picsum.photos/seed/beijing1/400/250',
+                    'https://picsum.photos/seed/beijing2/400/250'
+                ],
+                content: '这次北京之行真的太棒了！AI帮我规划的路线完美避开了人流高峰，故宫的每个角落都美得让人窒息。长城上的日落更是绝美，强烈推荐大家按照这个路线走！',
+                meta: {
+                    location: '北京',
+                    days: '2天1夜',
+                    budget: '¥800'
+                }
+            },
+            shanghai: {
+                id: 'shanghai',
+                author: '摄影爱好者小李',
+                avatar: 'https://picsum.photos/seed/user2/50/50',
+                time: '5小时前',
+                title: '上海周末游 | 外滩夜景+迪士尼梦幻之旅',
+                tags: ['摄影打卡', '休闲放松', '购物天堂'],
+                images: [
+                    'https://picsum.photos/seed/shanghai1/400/250',
+                    'https://picsum.photos/seed/shanghai2/400/250',
+                    'https://picsum.photos/seed/shanghai3/400/250'
+                ],
+                content: '上海真的是一个充满魔力的城市！外滩的夜景美得让人心醉，迪士尼的烟火秀更是震撼。AI规划的路线让我在有限的时间里体验了最精华的部分。',
+                meta: {
+                    location: '上海',
+                    days: '2天1夜',
+                    budget: '¥1200'
+                }
+            },
+            guangzhou: {
+                id: 'guangzhou',
+                author: '美食探索者小张',
+                avatar: 'https://picsum.photos/seed/user3/50/50',
+                time: '1天前',
+                title: '广州美食之旅 | 3天吃遍粤菜精华',
+                tags: ['美食之旅', '文化体验'],
+                images: [
+                    'https://picsum.photos/seed/guangzhou1/400/250',
+                    'https://picsum.photos/seed/guangzhou2/400/250'
+                ],
+                content: '作为一个吃货，这次广州之行简直是天堂！从早茶到夜宵，每一道菜都让我惊艳。AI推荐的餐厅都是本地人常去的地方，味道正宗，价格实惠。',
+                meta: {
+                    location: '广州',
+                    days: '3天2夜',
+                    budget: '¥900'
+                }
+            }
+        };
+
+        // 获取动态ID
+        function getQueryId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id') || 'beijing';
+        }
+
+        // 渲染动态详情
+        function renderPostDetail(post) {
+            const el = document.getElementById('post-detail');
+            el.innerHTML = `
+                <div class="flex items-start space-x-4 mb-4">
+                    <img src="${post.avatar}" alt="用户头像" class="w-12 h-12 rounded-full">
+                    <div>
+                        <h3 class="font-semibold text-gray-800">${post.author}</h3>
+                        <span class="text-sm text-gray-500">${post.time}</span>
+                    </div>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-3">${post.title}</h2>
+                <div class="flex flex-wrap gap-2 mb-4">
+                    ${post.tags.map(tag => `<span class="px-3 py-1 bg-blue-100 text-blue-600 text-sm rounded-full">${tag}</span>`).join('')}
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    ${post.images.map(img => `<img src="${img}" alt="图片" class="w-full h-48 object-cover rounded-lg">`).join('')}
+                </div>
+                <p class="text-gray-700 mb-4 leading-relaxed">${post.content}</p>
+                <div class="flex items-center space-x-2 text-sm text-gray-500">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>${post.meta.location}</span>
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-clock"></i>
+                    <span>${post.meta.days}</span>
+                    <span class="mx-2">•</span>
+                    <i class="fas fa-wallet"></i>
+                    <span>${post.meta.budget}</span>
+                </div>
+            `;
+        }
+
+        // 评论相关
+        function getComments(postId) {
+            const raw = localStorage.getItem('comments_' + postId);
+            return raw ? JSON.parse(raw) : [];
+        }
+        function saveComment(postId, comment) {
+            const comments = getComments(postId);
+            comments.push(comment);
+            localStorage.setItem('comments_' + postId, JSON.stringify(comments));
+        }
+        function renderComments(postId) {
+            const list = document.getElementById('comment-list');
+            const comments = getComments(postId);
+            if (comments.length === 0) {
+                list.innerHTML = '<div class="text-gray-400 text-sm">还没有评论，快来抢沙发吧！</div>';
+                return;
+            }
+            list.innerHTML = comments.map(c => `
+                <div class="bg-gray-50 comment-card p-4 flex items-start space-x-3">
+                    <img src="https://picsum.photos/seed/comment${c.time}/40/40" class="w-10 h-10 rounded-full">
+                    <div>
+                        <div class="flex items-center space-x-2 mb-1">
+                            <span class="font-medium text-gray-800">${c.author}</span>
+                            <span class="text-xs text-gray-500">${c.time}</span>
+                        </div>
+                        <div class="text-gray-700 text-sm">${c.text}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // 初始化页面
+        const postId = getQueryId();
+        const post = posts[postId] || posts['beijing'];
+        renderPostDetail(post);
+        renderComments(postId);
+
+        // 评论表单提交
+        document.getElementById('comment-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const input = document.getElementById('comment-input');
+            const text = input.value.trim();
+            if (!text) {
+                alert('请输入评论内容');
+                return;
+            }
+            const author = localStorage.getItem('userEmail') || '匿名用户';
+            const now = new Date();
+            const time = now.toLocaleString('zh-CN', { hour: '2-digit', minute: '2-digit', month: '2-digit', day: '2-digit' });
+            saveComment(postId, { author, text, time });
+            input.value = '';
+            renderComments(postId);
+        });
+    </script>
+</body>
+</html>
+
