@@ -94,7 +94,7 @@
                     <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition-colors">
                         <i class="fas fa-cog mr-2"></i>设置
                     </button>
-                    <button class="rounded-btn px-4 py-2 gradient-bg text-white hover:shadow-lg transition-all duration-300">
+                    <button class="rounded-btn px-4 py-2 gradient-bg text-white hover:shadow-lg transition-all duration-300" id="edit-profile-btn">
                         <i class="fas fa-edit mr-2"></i>编辑资料
                     </button>
                 </div>
@@ -393,13 +393,12 @@
         });
         
         // 编辑资料功能
-        document.querySelectorAll('button').forEach(btn => {
-            if (btn.textContent.includes('编辑资料')) {
-                btn.addEventListener('click', function() {
-                    alert('编辑资料功能即将开放，敬请期待！');
-                });
-            }
-        });
+        const editBtn = document.getElementById('edit-profile-btn');
+        if (editBtn) {
+            editBtn.addEventListener('click', function() {
+                window.location.href = 'page-edit-profile.html';
+            });
+        }
     </script>
 </body>
 </html>

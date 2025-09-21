@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账户信息</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #fef7f0 0%, #fff3e0 100%);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-6 font-sans">
+<div class="bg-white rounded-3xl shadow-xl w-full max-w-4xl p-10 space-y-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-6">账户信息</h1>
+
+    <div class="flex flex-col items-center mb-8">
+        <div class="relative w-28 h-28 rounded-full overflow-hidden border-4 border-white shadow-md">
+            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop" alt="Profile Picture" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center cursor-pointer opacity-0 hover:opacity-100 transition-opacity">
+                <i class="fas fa-camera text-white text-2xl"></i>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium text-gray-500">姓氏</label>
+                <div class="flex items-center text-gray-400 text-sm cursor-pointer hover:text-gray-600">
+                    <i class="fas fa-edit mr-1"></i> 编辑
+                </div>
+            </div>
+            <div class="relative">
+                <input type="text" value="Jane" readonly class="w-full px-5 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-800 cursor-default focus:outline-none">
+                <i class="fas fa-user absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium text-gray-500">姓名</label>
+                <div class="flex items-center text-gray-400 text-sm cursor-pointer hover:text-gray-600">
+                    <i class="fas fa-save mr-1"></i> 保存
+                </div>
+            </div>
+            <div class="relative">
+                <input type="text" value="Coop" class="w-full px-5 py-3 border border-gray-200 rounded-xl text-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-300">
+                <i class="fas fa-user absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium text-gray-500">邮箱</label>
+            </div>
+            <div class="relative">
+                <input type="email" value="jane234@example.com" readonly class="w-full px-5 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-800 cursor-default focus:outline-none">
+                <i class="fas fa-check-circle absolute right-5 top-1/2 -translate-y-1/2 text-green-500"></i>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium text-gray-500">手机号码</label>
+            </div>
+            <div class="relative">
+                <input type="tel" value="(209) 555-0104" readonly class="w-full px-5 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-800 cursor-default focus:outline-none">
+                <i class="fas fa-check-circle absolute right-5 top-1/2 -translate-y-1/2 text-green-500"></i>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium text-gray-500">生日</label>
+            </div>
+            <div class="relative">
+                <input type="text" value="17 nov, 1996" readonly class="w-full px-5 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-800 cursor-default focus:outline-none">
+                <i class="fas fa-calendar-alt absolute right-5 top-1/2 -translate-y-1/2 text-gray-400"></i>
+            </div>
+        </div>
+
+        <div>
+            <div class="flex items-center justify-between mb-2">
+                <label class="block text-sm font-medium text-gray-500">国家</label>
+            </div>
+            <div class="relative">
+                <div class="w-full px-5 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-800 cursor-default flex items-center justify-between">
+                    <span>Bangladesh</span>
+                    <i class="fas fa-chevron-down text-gray-400"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <div class="flex items-center justify-between mb-2 mt-6">
+            <label class="block text-sm font-medium text-gray-500">简介</label>
+            <div class="flex items-center text-gray-400 text-sm cursor-pointer hover:text-gray-600">
+                <i class="fas fa-edit mr-1"></i> 编辑
+            </div>
+        </div>
+        <textarea readonly class="w-full px-5 py-3 border border-gray-200 rounded-xl bg-gray-50 text-gray-800 cursor-default focus:outline-none resize-none" rows="4">
+Passionate about connecting businesses with the goodness of nature! 🌱 I'm on a mission to make organic food, medicine, fruits, and FMCG products easily accessible to B2B partners. 🌿 Health and sustainability drive my business ethos. ✨ I love working closely with businesses that share our values. Let's grow together! 🌱
+            </textarea>
+    </div>
+</div>
+</body>
+</html>
